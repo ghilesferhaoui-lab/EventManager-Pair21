@@ -45,6 +45,7 @@ def create_event(
 )
 def list_events(
     search: str | None = Query(default=None),
+    location: str | None = Query(default=None),
     db: Session = Depends(get_db)
 ):
     query = db.query(Event)
@@ -54,8 +55,12 @@ def list_events(
             Event.title.ilike(f"%{search}%")
         )
 
-    return query.order_by(Event.date).all()
+    if location:
+        query = query.filter(
+            Event.location.ilike(f"%{location}%")
+        )
 
+    return query.order_by(Event.date).all()
 
 @router.get(
     "/{event_id}",
