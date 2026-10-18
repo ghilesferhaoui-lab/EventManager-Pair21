@@ -4,3 +4,7 @@ sqlalchemy
 pydantic[email]
 pytest
 httpx
+
+pytest
+pytest-cov
+email-validator
