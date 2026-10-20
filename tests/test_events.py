@@ -47,3 +47,19 @@ def test_bad_capacity_rejected(sample_event_dict, bad):
     sample_event_dict["capacity"] = bad
     with pytest.raises(ValidationError):
         EventCreate(**sample_event_dict)
+
+def test_title_100_chars_ok(sample_event_dict):
+    sample_event_dict["title"] = "A" * 100
+    event = EventCreate(**sample_event_dict)
+    assert len(event.title) == 100
+
+
+def test_title_101_chars_rejected(sample_event_dict):
+    sample_event_dict["title"] = "A" * 101
+    with pytest.raises(ValidationError):
+        EventCreate(**sample_event_dict)        
+def test_filter_by_title_with_mixed_case_query(prepopulated_event_store):
+    result = filter_events_by_title(prepopulated_event_store, "cYbErSeCuRiTy")
+
+    assert len(result) == 1
+    assert result[0].title == "Cybersecurity Summit"        
