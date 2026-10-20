@@ -55,3 +55,56 @@ def test_short_name_raises_validation_error(sample_participant_dict):
 def test_duplicate_registration_raises_value_error():
     with pytest.raises(ValueError):
         check_duplicate_registration([1, 2, 3], 2)
+
+# ---------------------------------------------------------------------------
+# Lab 3 - mutation killers (Student B)
+# ---------------------------------------------------------------------------
+from types import SimpleNamespace
+
+from app.schemas import Participant as ParticipantSchema
+from app.schemas import Registration as RegistrationSchema
+
+
+def test_name_max_length_100_is_valid(sample_participant_dict):
+    sample_participant_dict["name"] = "a" * 100
+    assert len(ParticipantCreate(**sample_participant_dict).name) == 100
+
+
+def test_name_101_chars_is_rejected(sample_participant_dict):
+    sample_participant_dict["name"] = "a" * 101
+    with pytest.raises(ValidationError):
+        ParticipantCreate(**sample_participant_dict)
+
+
+def test_zero_capacity_has_no_seat():
+    assert has_available_capacity(0, 0) is False
+
+
+def test_first_seat_is_available():
+    assert has_available_capacity(0, 1) is True
+
+
+def test_duplicate_error_message_names_the_id():
+    with pytest.raises(ValueError) as excinfo:
+        check_duplicate_registration([7], 7)
+    assert str(excinfo.value) == "Participant 7 is already registered."
+
+
+def test_duplicate_guard_on_empty_list_does_not_raise():
+    check_duplicate_registration([], 1)
+
+
+def test_participant_schema_reads_object_attributes():
+    obj = SimpleNamespace(id=1, name="Amine", email="amine@example.com")
+    p = ParticipantSchema.model_validate(obj)
+    assert (p.id, p.name, p.email) == (1, "Amine", "amine@example.com")
+
+
+def test_registration_schema_reads_object_attributes():
+    obj = SimpleNamespace(id=5, event_id=2, participant_id=3)
+    r = RegistrationSchema.model_validate(obj)
+    assert (r.id, r.event_id, r.participant_id) == (5, 2, 3)
+
+
+def test_email_is_kept_exactly_as_given(sample_participant_dict):
+    assert ParticipantCreate(**sample_participant_dict).email == "alice@example.com"
