@@ -13,3 +13,12 @@ events.db
 
 .vscode/
 .idea/
+.mutmut-cache
+htmlcov/
+.coverage
+
+html/
+.mutmut-cache
+htmlcov/
+.coverage
+events.db
