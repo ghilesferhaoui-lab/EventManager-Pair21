@@ -15,3 +15,12 @@ events.db
 .idea/
 .coverage
 .mutmut-cache
+.mutmut-cache
+htmlcov/
+.coverage
+
+html/
+.mutmut-cache
+htmlcov/
+.coverage
+events.db

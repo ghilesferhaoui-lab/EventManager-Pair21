@@ -1,0 +1,7 @@
+[run]
+source = app
+omit =
+    app/routers/*
+    app/main.py
+    app/database.py
+    app/models.py
