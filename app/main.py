@@ -11,12 +11,15 @@ app = FastAPI(
 )
 
 
-Base.metadata.create_all(bind=engine)
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
 
 
 app.include_router(events.router)
 app.include_router(participants.router)
 app.include_router(registrations.router)
+
 
 @app.get("/")
 def root():
