@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: .
+    container_name: eventmanager_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - events_sqlite_data:/data
+  frontend:
+    build: ./frontend
+    container_name: eventmanager_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  events_sqlite_data:
